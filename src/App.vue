@@ -1,47 +1,44 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { reactive } from 'vue';
+import Cabecalho from './components/Cabecalho.vue';
+import Formulario from './components/Formulario.vue';
+import Resultado from './components/Resultado.vue';
+
+const estado = reactive({
+  num1: 0,
+  num2: 0,
+  operacao: 'add',
+});
+
+const calculaResultado = () => {
+  const { num1, num2, operacao } = estado;
+
+  switch (operacao) {
+    case 'add':
+      return num1 + num2;
+    case 'sub':
+      return num1 - num2;
+    case 'mul':
+      return num1 * num2;
+    case 'div':
+      return num2 !== 0 ? num1 / num2 : 'Erro: Divisão por zero';
+    default:
+      return 0;
+  }
+};
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="container">
+    <Cabecalho />
+    <Formulario
+      :num1="estado.num1"
+      :num2="estado.num2"
+      :operacao="estado.operacao"
+      :atualiza-num1="evento => (estado.num1 = parseFloat(evento.target.value))"
+      :atualiza-num2="evento => (estado.num2 = parseFloat(evento.target.value))"
+      :atualiza-operacao="evento => (estado.operacao = evento.target.value)"
+    />
+    <Resultado :resultado="calculaResultado()" />
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
